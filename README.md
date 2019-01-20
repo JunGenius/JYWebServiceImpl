@@ -1,12 +1,24 @@
 使用步骤:
 
-1.maven { url 'https://www.jitpack.io' }
+1.build.gradle
 
-2.implementation 'com.github.JunGenius:JYWebServiceImpl:Tag'
+            allprojects {
+                repositories {
+                    google()
+                    jcenter()
+
+                    maven { url 'https://www.jitpack.io' }
+                }
+            }
+
+2. app build.gradle 
+
+            dependencies {
+                 implementation 'com.github.JunGenius:JYWebServiceImpl:Tag'
+            }
+            
 
 代码:
-
-
 
 1. webservice: 参数配置 (需application中配置相关参数) (连接超时时间等参数不设置取默认值)
 
