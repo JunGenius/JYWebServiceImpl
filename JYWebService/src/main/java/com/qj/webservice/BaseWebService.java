@@ -145,8 +145,8 @@ public abstract class BaseWebService {
     }
 
 
-    abstract Map<String, String> setParamMap();
+    public abstract Map<String, String> setParamMap();
 
-    abstract String setMethod();
+    public abstract String setMethod();
 
 }
