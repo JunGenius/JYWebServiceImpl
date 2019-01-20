@@ -1,8 +1,8 @@
 使用步骤:
 
-maven { url 'https://www.jitpack.io' }
+1.maven { url 'https://www.jitpack.io' }
 
-implementation 'com.github.JunGenius:JYWebServiceImpl:Tag'
+2.implementation 'com.github.JunGenius:JYWebServiceImpl:Tag'
 
 代码:
 
