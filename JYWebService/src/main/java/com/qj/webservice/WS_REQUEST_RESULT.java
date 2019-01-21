@@ -4,12 +4,6 @@ import android.support.annotation.IntDef;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
-/**
- * @author qujun
- * @time 2018/5/30 10:41
- * Lonely people will pretend to be very busy.
- */
-
 public class WS_REQUEST_RESULT {
 
     /*

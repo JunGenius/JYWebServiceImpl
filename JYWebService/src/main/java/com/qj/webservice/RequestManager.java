@@ -19,34 +19,12 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 /**
- *
- *
- *                                                    __----~~~~~~~~~~~------___
- *                                   .  .   ~~//====......          __--~ ~~
- *                   -.            \_|//     |||\\  ~~~~~~::::... /~
- *                ___-==_       _-~o~  \/    |||  \\            _/~~-
- *        __---~~~.==~||\=_    -_--~/_-~|-   |\\   \\        _/~
- *    _-~~     .=~    |  \\-_    '-~7  /-   /  ||    \      /
- *  .~       .~       |   \\ -_    /  /-   /   ||      \   /
- * /  ____  /         |     \\ ~-_/  /|- _/   .||       \ /
- * |~~    ~~|--~~~~--_ \     ~==-/   | \~--===~~        .\
- *          '         ~-|      /|    |-~\~~       __--~~
- *                      |-~~-_/ |    |   ~\_   _-~            /\
- *                           /  \     \__   \/~                \__
- *                       _--~ _/ | .-~~____--~-/                  ~~==.
- *                      ((->/~   '.|||' -_|    ~~-/ ,              . _||
- *                                 -_     ~\      ~~---l__i__i__i--~~_/
- *                                 _-~-__   ~)  \--______________--~~
- *                               //.-~~~-~_--~- |-------~~~~~~~~
- *                                      //.-~~~--\
- *                               神兽保佑
- *                              代码无BUG!
- *
- *
- * @des 请求处理 ( Retrofit2+Okhttp3 通过SOAP协议请求WebService )
- * @author qujun
- * @time 2019/1/19 22:37
- */
+ * Request  ( Retrofit2+Okhttp3 requests WebService via SOAP protocol )
+ * author qujun
+ * time 2019/1/21 11:13
+ * Because had because, so had so, since has become since, why say why。
+ **/
+
 public class RequestManager {
 
     private static RequestManager manager;//管理者实例

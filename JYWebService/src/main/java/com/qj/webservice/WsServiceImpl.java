@@ -9,34 +9,13 @@ import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
+
 /**
- * *************************************************************
- * *
- * .=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-.       *
- * |                     ______                     |      *
- * |                  .-"      "-.                  |      *
- * |                 /            \                 |      *
- * |     _          |              |          _     |      *
- * |    ( \         |,  .-.  .-.  ,|         / )    |      *
- * |     > "=._     | )(__/  \__)( |     _.=" <     |      *
- * |    (_/"=._"=._ |/     /\     \| _.="_.="\_)    |      *
- * |           "=._"(_     ^^     _)"_.="           |      *
- * |               "=\__|IIIIII|__/="               |      *
- * |              _.="| \IIIIII/ |"=._              |      *
- * |    _     _.="_.="\          /"=._"=._     _    |      *
- * |   ( \_.="_.="     `--------`     "=._"=._/ )   |      *
- * |    > _.="                            "=._ <    |      *
- * |   (_/                                    \_)   |      *
- * |                                                |      *
- * '-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-='      *
- * *
- * LASCIATE OGNI SPERANZA, VOI CH'ENTRATE           *
- * *************************************************************
- *
- * @author qujun
- * @des webservice 请求参数接口
- * @time 2018/5/30 1:20
- */
+ * Webservice parameter interface
+ * author qujun
+ * time 2019/1/21 11:13
+ * Because had because, so had so, since has become since, why say why。
+ **/
 
 public interface WsServiceImpl {
 
