@@ -1,20 +1,9 @@
 使用步骤:
 
-1.build.gradle
-
-            allprojects {
-                repositories {
-                    google()
-                    jcenter()
-
-                    maven { url 'https://www.jitpack.io' }
-                }
-            }
-
-2. app build.gradle 
+1. app build.gradle 
 
             dependencies {
-                 implementation 'com.github.JunGenius:JYWebServiceImpl:Tag'
+                 implementation 'com.qj.webservice:QYWebservice:1.0.1'
             }
             
 
