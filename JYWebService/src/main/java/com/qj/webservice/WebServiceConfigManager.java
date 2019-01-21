@@ -7,6 +7,7 @@ package com.qj.webservice;
  * time 2019/1/21 11:13
  * Because had because, so had so, since has become since, why say why。
  **/
+
 public class WebServiceConfigManager {
 
 

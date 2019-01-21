@@ -4,17 +4,23 @@ import android.os.Environment;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import okhttp3.Cache;
 import okhttp3.OkHttpClient;
 import okhttp3.ResponseBody;
 import okhttp3.logging.HttpLoggingInterceptor;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
 
@@ -32,6 +38,8 @@ public class RequestManager {
     WsServiceImpl apiService = null;
 
     private String webserviceResult = "";
+
+    private Disposable mDisposable;
 
     static synchronized RequestManager getInstance() {
         if (manager == null)
@@ -75,51 +83,106 @@ public class RequestManager {
                 .baseUrl(BASE_URl)
                 .addConverterFactory(ScalarsConverterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create())
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .client(mClient)
                 .build();
         apiService = mRetrofit.create(WsServiceImpl.class);
     }
 
+
+    private String getXml(String method, Map<String, String> map) {
+
+        return "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
+                + " <soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n"
+                + " <soap:Body>\n "
+                + " <" + method + " xmlns=\"" + WebServiceConfigManager.getBuilder().NAME_SPACE + "\">\n"
+                + getNodeValue(map) + "\n"
+                + " </" + method + ">\n"
+                + " </soap:Body>\n"
+                + " </soap:Envelope>\n";
+
+    }
+
+    private String getNodeValue(Map<String, String> map) {
+        StringBuilder str = new StringBuilder();
+
+        if (map != null)
+            for (Map.Entry<String, String> entry : map.entrySet()) {
+                str.append(toStart(entry.getKey())).append(entry.getValue()).append(toEnd(entry.getKey()));
+            }
+        return str.toString();
+    }
+
+    private String toStart(String key) {
+        return "<" + key + ">";
+    }
+
+    private String toEnd(String key) {
+        return "</" + key + ">";
+    }
+
+
     /**
      * 访问webservice
      */
-    void execute(Call<ResponseBody> call, final String method, final RequestCallBack callBack) {
+    void execute(Observable<ResponseBody> call, final String method, Map<String, String> map, final ObservableEmitter<String> emitter) {
 
-        callBack.onStart();
+        // 添加请求头
+        Map<String, String> headers = new HashMap<>();
+        headers.put("Content-Type", "text/xml; charset=utf-8");
+        headers.put("SOAPAction", WebServiceConfigManager.getBuilder().NAME_SPACE + method);
 
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+        call = apiService.getResponBody(
+                headers,
+                WebServiceConfigManager.getBuilder().HEAD_PAGE,
+                method,
+                getXml(method, map));
 
-                if (response.body() == null) {
-                    callBack.onError(WS_REQUEST_RESULT.REQUEST_ERROR, "请求发生错误..");
-                    callBack.onFinish();
-                    return;
-                }
 
-                try {
-                    if (analysisResult(response.body().string(), method)) {
-                        callBack.onSuccess(webserviceResult);
-                        return;
+        call.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<ResponseBody>() {
+
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        mDisposable = d;
                     }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
 
-                callBack.onError(WS_REQUEST_RESULT.REQUEST_RESULT_ERROR, "请求结果xml解析错误..");
-                callBack.onFinish();
 
-            }
+                    @Override
+                    public void onError(Throwable e) {
+                        emitter.onError(getErrorMsg(WS_REQUEST_RESULT.REQUEST_NET_ERROR, "请求连接发生异常(超时 ，断网 etc)"));
+                    }
 
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                callBack.onError(WS_REQUEST_RESULT.REQUEST_NET_ERROR, t.toString());
-                callBack.onFinish();
-            }
-        });
+                    @Override
+                    public void onComplete() {
+                        emitter.onComplete();
+                    }
+
+                    @Override
+                    public void onNext(ResponseBody responseBody) {
+                        if (responseBody == null) {
+                            emitter.onError(getErrorMsg(WS_REQUEST_RESULT.REQUEST_ERROR, "请求发生错误"));
+                            return;
+                        }
+                        try {
+                            if (analysisResult(responseBody.string(), method)) {
+                                emitter.onNext(webserviceResult);
+                                return;
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        emitter.onError(getErrorMsg(WS_REQUEST_RESULT.REQUEST_RESULT_ERROR, "请求结果xml解析错误.."));
+                    }
+
+                });
     }
 
+
+    private Throwable getErrorMsg(int code, String msg) {
+        return new Throwable("code:" + WS_REQUEST_RESULT.REQUEST_RESULT_ERROR + " msg:" + msg);
+    }
 
     // 解析xml
     private boolean analysisResult(String response, final String method) {
@@ -134,6 +197,13 @@ public class RequestManager {
         }
 
         return false;
+    }
+
+
+    public void cancelRequest() {
+        if (mDisposable != null && !mDisposable.isDisposed()) {
+            mDisposable.dispose();
+        }
     }
 
     /*

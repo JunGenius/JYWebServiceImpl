@@ -2,7 +2,7 @@ package com.qj.webservice;
 
 
 /**
- * author qujun
+ * author qujun (Deprecated)
  * time 2019/1/21 11:13
  * Because had because, so had so, since has become since, why say why。
  **/
