@@ -1,4 +1,5 @@
 apply plugin: 'com.android.library'
+apply plugin: 'com.novoda.bintray-release'
 
 android {
     compileSdkVersion 27
@@ -50,4 +51,15 @@ dependencies {
         exclude group: 'stax', module: 'stax-api'
         exclude group: 'stax', module: 'stax'
     }
+}
+
+
+publish {
+    repoName = 'JunGenius'           //bintray仓库名
+    userOrg ='jungenius0108'           //bintray注册的用户名
+    groupId = 'com.qj.webservice'            //compile引用时的第1部分groupId
+    artifactId = 'QYWebservice'       //compile引用时的第2部分项目名
+    publishVersion = '1.0.1'       //compile引用时的第3部分版本号
+    desc = 'Webservice for Android'
+    website = 'https://github.com/JunGenius/JYWebServiceImpl'
 }
