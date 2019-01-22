@@ -3,7 +3,7 @@
 1. app build.gradle 
 
             dependencies {
-                 implementation 'com.qj.webservice:QYWebservice:1.0.1'
+                 implementation 'com.qj.webservice:QYWebservice:1.1.0'
             }
             
 
@@ -48,27 +48,33 @@
 
 3. 访问webservice
 
-            TestWs ws = new TestWs("北京");
+           TestWs ws = new TestWs("北京");
 
-            ws.doRequest(new RequestCallBack() {
+           ws.getRequest()
+                // 处理相应的实体转换 
+                .map(new Function<String, Object>() {
+                    @Override
+                    public Info apply(String s) throws Exception {
+                        return new Object();
+                    }
+                }).subscribe(new Observer<Info>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+               
+            }
 
-                @Override
-                public void onSuccess(String data) {
-                      txt.setText(data);
-                }
+            @Override
+            public void onNext(Object o) {
+               
+            }
 
-                @Override
-                public void onError(int result, String msg) {
-                      txt.setText(msg);
-                }
+            @Override
+            public void onError(Throwable e) {
+                
+            }
 
-                @Override
-                public void onStart() {
-                   // Show Loading...
-                }
-
-                @Override
-                public void onFinish() {
-                   // Dismiss Loading..
-                }
-            });
+            @Override
+            public void onComplete() {
+                
+            }
+        });
