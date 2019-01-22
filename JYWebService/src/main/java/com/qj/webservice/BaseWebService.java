@@ -65,6 +65,10 @@ public abstract class BaseWebService {
         RequestManager.getInstance().cancelRequest();
     }
 
+    public void clear(){
+        RequestManager.getInstance().clear();
+    }
+
     public abstract Map<String, String> setParamMap();
 
     public abstract String setMethod();
