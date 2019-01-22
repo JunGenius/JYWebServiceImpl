@@ -41,7 +41,7 @@ public class RequestManager {
 
     private Disposable mDisposable;
 
-    static synchronized RequestManager getInstance() {
+    public static synchronized RequestManager getInstance() {
         if (manager == null)
             manager = new RequestManager();
         return manager;
